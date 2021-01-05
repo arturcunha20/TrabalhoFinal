@@ -1,6 +1,6 @@
 #include <stdio.h>
 
 int main() {
-    printf("OLA TUDO BEM 123\n");
+    printf("O NEVES É UM LIXO\n");
     return 0;
 }
