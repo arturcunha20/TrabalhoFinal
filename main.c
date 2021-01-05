@@ -1,6 +1,6 @@
 #include <stdio.h>
 
 int main() {
-    printf("O NEVES É UM LIXO E O LEANDRO TMB\n");
+    printf("O NEVES É UM LIXO\n");
     return 0;
 }
