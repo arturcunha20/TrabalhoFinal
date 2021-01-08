@@ -80,40 +80,33 @@ void ReadEtapas()
 
 void ReadCorridas()
 {
-    int res,res1,etapas,pilotos,i=0;
+    int etapas,pilotos,i=0;
+    char linha[1024];
     FILE *file;
     Corrida c;
-    char linha[1024],token[1024];
 
     file = fopen("../Corridas.txt","r");
     while (!feof(file))
     {
         fscanf(file,"%s\n",&linha);
+        c.id_piloto = 0;
+        c.tempo = 0;
+        strcpy(c.incio,"-");
+        strcpy(c.fim,"-");
         if(i == 0)
         {
-            strcpy(token, strtok(linha, ";"));
-            etapas = atoi(token);
-            strcpy(token, strtok(NULL, ";"));
-            pilotos = atoi(token);
+            sscanf( linha, "%d;%d", &etapas,&pilotos);
             printf("Etapas -> %d | Pilotos -> %d\n",etapas,pilotos);
-            //res = fscanf(file,"%d;%d\n",&etapas,&pilotos);
+
         }
         else
         {
-            strcpy(token, strtok(linha, ";"));
-            c.id_piloto = atoi(token);
-            //printf("%s\n",linha);
-            strcpy(c.incio, strtok(NULL, ";"));
-            strcpy(c.fim, strtok(NULL, ";"));
-
-            strcpy(token, strtok(NULL, ";"));
-            c.tempo = atoi(token);
-            //printf("%s\n",linha);
-            //res1 = fscanf(file,"%d;%[^;];%[^;];%d\n",&c.id_piloto,&c.incio,&c.fim,&c.tempo);
-            printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d\n\n",c.id_piloto,c.incio,c.fim,c.tempo);
+            sscanf( linha, "%d;%[^;];%[^;];%d", &c.id_piloto, &c.incio, &c.fim, &c.tempo );
+            printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d\n",c.id_piloto,c.incio,c.fim,c.tempo);
         }
         i++;
     }
+    printf("Estao %d pilotos",pilotos);
     fclose(file);
 }
 
