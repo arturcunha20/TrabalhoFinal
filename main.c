@@ -1,18 +1,20 @@
 #include <stdio.h>
+#include <string.h>
 
-struct typedef
+typedef struct
 {
-    char inicio[50];
-    char fim[50];
-    int distancia;
-}Etapa;
-
-struct typedef
-{
-
+    int id;
+    char nome[50];
+    char marca[50];
 }Piloto;
 
 int main() {
-    printf("O LEANDRO É UM LIXO 123\n");
+    Piloto p;
+
+    p.id = 1;
+    strcpy("Artur Cunha",p.nome);
+    strcpy("Subaru",p.nome);
+
+    printf("%d %s %s\n",p.id,p.nome,p.marca);
     return 0;
 }
