@@ -3,9 +3,18 @@
 
 typedef struct
 {
+
+    char inicio[50];
+    char fim[50];
+    int distancia;
+}Etapa;
+
+typedef struct
+{
     int id;
     char nome[50];
     char marca[50];
+
 }Piloto;
 
 int main() {
