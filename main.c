@@ -25,36 +25,22 @@ typedef struct
     int tempo;
 }Corrida;
 
-void InsertPiloto()
+void ReadPilotos()
 {
+    int res;
     FILE *file;
-    int res,contPiloto;
     Piloto p;
-    fflush(stdin);
 
     file = fopen("../Pilotos.txt","r");
-    while (!feof(file)) // feof devolve 0 ou 1
+    while (!feof(file))
     {
-        res = fscanf(file,"%d;%[^;];%[^;];\n",&p.id,&p.nome,&p.marca);
+        res = fscanf(file,"%d;%[^;];%[^;];\n",&p.id ,&p.nome ,&p.marca);
+
+        printf("Id -> %d | Nome -> %s | Marca -> %s\n",p.id ,p.nome ,p.marca);
+
     }
 
-    if(res<0)
-    {
-        contPiloto = 0;
-    }
-    else{
-        contPiloto = p.id;
-    }
-    fclose(file);
-    fflush(stdin);
-    printf("Diga o nome do piloto  -> "); gets(p.nome);
-
-    printf("\nDiga a marca do carro -> "); gets(p.marca);
-
-    p.id = contPiloto + 1;
     printf("\n\n");
-    file = fopen("../Pilotos.txt","a");
-    fprintf(file,"%d;%s;%s;\n",p.id,p.nome,p.marca);
     fclose(file);
 }
 
@@ -77,8 +63,7 @@ void ReadEtapas()
     fclose(file);
 }
 
-
-void ReadCorridas()
+void Validos()
 {
     int etapas,pilotos,i=0;
     char linha[1024];
@@ -86,7 +71,120 @@ void ReadCorridas()
     Corrida c,novo[100],aux;
 
     for (int j = 0; j < 100; ++j) {
-            novo[j].id_piloto = 0;
+        novo[j].id_piloto = 0;
+    }
+
+    file = fopen("../Corridas.txt","r");
+    while (!feof(file))
+    {
+        fscanf(file,"%s\n",&linha);
+        c.id_piloto = 0;
+        c.tempo = 0;
+        strcpy(c.incio,"-");
+        strcpy(c.fim,"-");
+        if(i == 0)
+        {
+            sscanf( linha, "%d;%d", &etapas,&pilotos);
+        }
+        else
+        {
+            sscanf( linha, "%d;%[^;];%[^;];%d", &c.id_piloto, &c.incio, &c.fim, &c.tempo );
+            //printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d\n",c.id_piloto,c.incio,c.fim,c.tempo);
+            novo[i-1].id_piloto = c.id_piloto;
+            strcpy(novo[i-1].incio,c.incio);
+            strcpy(novo[i-1].fim,c.fim);
+            novo[i-1].tempo = c.tempo;
+        }
+        i++;
+    }
+
+    int cont =0,contValidos = 0;
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            if(novo[j].tempo > 0)
+            {
+                cont++;
+            }
+
+            if(cont == etapas)
+            {
+                contValidos++;
+                cont = 0;
+            }
+        }
+    }
+    /*
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d \n",novo[j].id_piloto,novo[j].incio,novo[j].fim,novo[j].tempo);
+        }
+    }
+    */
+    printf("Estao %d pilotos validos\n\n",contValidos);
+    fclose(file);
+
+}
+
+void TodosPilotos()
+{
+    int etapas,pilotos,i=0;
+    char linha[1024];
+    FILE *file;
+    Corrida c,novo[100];
+
+    for (int j = 0; j < 100; ++j) {
+        novo[j].id_piloto = 0;
+    }
+
+    file = fopen("../Corridas.txt","r");
+    while (!feof(file))
+    {
+        fscanf(file,"%s\n",&linha);
+        c.id_piloto = 0;
+        c.tempo = 0;
+        strcpy(c.incio,"-");
+        strcpy(c.fim,"-");
+        if(i == 0)
+        {
+            sscanf( linha, "%d;%d", &etapas,&pilotos);
+        }
+        else
+        {
+            sscanf( linha, "%d;%[^;];%[^;];%d", &c.id_piloto, &c.incio, &c.fim, &c.tempo );
+            //printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d\n",c.id_piloto,c.incio,c.fim,c.tempo);
+            novo[i-1].id_piloto = c.id_piloto;
+            strcpy(novo[i-1].incio,c.incio);
+            strcpy(novo[i-1].fim,c.fim);
+            novo[i-1].tempo = c.tempo;
+        }
+        i++;
+    }
+
+    /*
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d \n",novo[j].id_piloto,novo[j].incio,novo[j].fim,novo[j].tempo);
+        }
+    }
+    */
+    printf("Estao %d pilotos validos\n\n",pilotos);
+    fclose(file);
+
+}
+
+
+void ListarCorridas()
+{
+    int etapas,pilotos,i=0;
+    char linha[1024];
+    FILE *file;
+    Corrida c,novo[100],aux;
+
+    for (int j = 0; j < 100; ++j) {
+        novo[j].id_piloto = 0;
     }
 
     file = fopen("../Corridas.txt","r");
@@ -113,9 +211,6 @@ void ReadCorridas()
         }
         i++;
     }
-
-
-
 
 
     for (int j = 0; j < 100; ++j) {
@@ -178,33 +273,69 @@ void ReadCorridas()
             printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d \n",novo[j].id_piloto,novo[j].incio,novo[j].fim,novo[j].tempo);
         }
     }
-
-    printf("\n\nEstao %d pilotos \n",pilotos);
-    printf("Estao %d pilotos validos",contValidos);
     fclose(file);
 }
 
-
-void ReadPilotos()
+void medias()
 {
-    int res;
+    int etapas,pilotos,i=0;
+    char linha[1024];
     FILE *file;
-    Piloto p;
+    Corrida c,novo[100],aux;
 
-    file = fopen("../Pilotos.txt","r");
-    while (!feof(file))
-    {
-        res = fscanf(file,"%d;%[^;];%[^;];\n",&p.id ,&p.nome ,&p.marca);
-
-        printf("Id -> %d | Nome -> %s | Marca -> %s\n",p.id ,p.nome ,p.marca);
-
+    for (int j = 0; j < 100; ++j) {
+        novo[j].id_piloto = 0;
     }
 
-    printf("\n\n");
+    file = fopen("../Corridas.txt","r");
+    while (!feof(file))
+    {
+        fscanf(file,"%s\n",&linha);
+        c.id_piloto = 0;
+        c.tempo = 0;
+        strcpy(c.incio,"-");
+        strcpy(c.fim,"-");
+        if(i == 0)
+        {
+            sscanf( linha, "%d;%d", &etapas,&pilotos);
+        }
+        else
+        {
+            sscanf( linha, "%d;%[^;];%[^;];%d", &c.id_piloto, &c.incio, &c.fim, &c.tempo );
+            novo[i-1].id_piloto = c.id_piloto;
+            strcpy(novo[i-1].incio,c.incio);
+            strcpy(novo[i-1].fim,c.fim);
+            novo[i-1].tempo = c.tempo;
+        }
+        i++;
+    }
     fclose(file);
+
+    int media[etapas];
+
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            for (int i = 0; i < 100; ++i) {
+                if (novo[i].id_piloto != 0)
+                {
+                    if(strcmp(novo[i].incio,novo[j].incio) == 0 && strcmp(novo[i].fim,novo[j].fim) == 0)
+                    {
+                        media[i] = novo[i].tempo + novo[j].tempo;
+                    }
+                }
+            }
+        }
+    }
+
+
+    for (int j = 0; j < 3; ++j) {
+        printf("%d ",media[i]);
+    }
 }
+
 int main() {
-    int opcao;
+    int opcao,opcaoE;
     //InsertPiloto();
     //InsertPiloto();
 
@@ -212,9 +343,9 @@ int main() {
     //ReadEtapas();
     //ReadCorridas();
 
-    printf("Pilotos\n");
-    printf("Etapas\n");
-    printf("Corrida\n");
+    printf("1 - Pilotos\n");
+    printf("2 - Etapas\n");
+    printf("3 - Corrida\n");
 
     do {
         printf("Diga a opcao -> "); scanf("%d",&opcao);
@@ -222,9 +353,19 @@ int main() {
         switch (opcao) {
             case 1: ReadPilotos();break;
             case 2: ReadEtapas();break;
-            case 3: ReadCorridas();break;
+            case 3:                 do {
+                    printf("\n\n1 - Todos pilotos\n2 - Validos\n3 - Listar\n4 - Medias\n0 - Voltar\nOpcao -> "); scanf("%d",&opcaoE);
+                    printf("\n");
+                    switch (opcaoE) {
+                        case 1: TodosPilotos(); break;
+                        case 2: Validos(); break;
+                        case 3: ListarCorridas(); break;
+                        case 4: medias(); break;
+                    }
+                } while (opcaoE < 1 && opcaoE > 4 || opcaoE != 0);
+                printf("\n");
+                break;
         }
     } while (opcao!=0);
-
     return 0;
 }
