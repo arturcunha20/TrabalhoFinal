@@ -280,8 +280,9 @@ void medias()
 {
     int etapas,pilotos,i=0;
     char linha[1024];
-    FILE *file;
+    FILE *file,*fileE;
     Corrida c,novo[100],aux;
+    char inicio[2][10],fim[2][10];
 
     for (int j = 0; j < 100; ++j) {
         novo[j].id_piloto = 0;
@@ -311,7 +312,88 @@ void medias()
     }
     fclose(file);
 
+    int as = 0;
+    float distancia;
+    char incioString[10],fimString[10];
+
+    for (int j = 0; j < 10; ++j) {
+        for (int k = 0; k < 10; ++k) {
+            inicio[k][j] = ' ';
+            fim[k][j] = ' ';
+        }
+    }
+
+    fileE = fopen("../Etapas.txt","r");
+    while (!feof(fileE))
+    {
+        fscanf(fileE,"%[^;];%[^;];%f\n",incioString ,fimString ,&distancia);
+        //printf("%s %s | \n",incioString,fimString);
+
+        for(i=0;i<10;i++)
+        {
+            inicio[i][as] = incioString[i];
+            fim[i][as] = fimString[i];
+        }
+        as++;
+
+    }
+    fclose(fileE);
+
     int media[etapas];
+
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+
+        }
+    }
+
+
+    for (int j = 0; j < 10; ++j) {
+        for (int k = 0; k < 10; ++k) {
+            if(inicio[k][j] != ' ')
+            {
+                printf("%c",inicio[k][j]);
+            }
+        }
+    }
+
+}
+
+void Rapido_Lento()
+{
+    int etapas,pilotos,i=0,tempos[pilotos],ola,cont =0,maior=1,menor=214748347,maiorN=0,menorN=0;
+    char linha[1024];
+    FILE *file;
+    Corrida c,novo[100],aux;
+
+    for (int j = 0; j < 100; ++j) {
+        novo[j].id_piloto = 0;
+    }
+
+    file = fopen("../Corridas.txt","r");
+    while (!feof(file))
+    {
+        fscanf(file,"%s\n",&linha);
+        c.id_piloto = 0;
+        c.tempo = 0;
+        strcpy(c.incio,"-");
+        strcpy(c.fim,"-");
+        if(i == 0)
+        {
+            sscanf( linha, "%d;%d", &etapas,&pilotos);
+        }
+        else
+        {
+            sscanf( linha, "%d;%[^;];%[^;];%d", &c.id_piloto, &c.incio, &c.fim, &c.tempo );
+            //printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d\n",c.id_piloto,c.incio,c.fim,c.tempo);
+            novo[i-1].id_piloto = c.id_piloto;
+            strcpy(novo[i-1].incio,c.incio);
+            strcpy(novo[i-1].fim,c.fim);
+            novo[i-1].tempo = c.tempo;
+        }
+        i++;
+    }
 
     for (int j = 0; j < 100; ++j) {
         if (novo[j].id_piloto != 0)
@@ -319,9 +401,11 @@ void medias()
             for (int i = 0; i < 100; ++i) {
                 if (novo[i].id_piloto != 0)
                 {
-                    if(strcmp(novo[i].incio,novo[j].incio) == 0 && strcmp(novo[i].fim,novo[j].fim) == 0)
+                    if(novo[i].id_piloto >= novo[j].id_piloto)
                     {
-                        media[i] = novo[i].tempo + novo[j].tempo;
+                        aux = novo[i];
+                        novo[i] = novo[j];
+                        novo[j] = aux;
                     }
                 }
             }
@@ -329,9 +413,34 @@ void medias()
     }
 
 
-    for (int j = 0; j < 3; ++j) {
-        printf("%d ",media[i]);
+
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            cont = cont + novo[j].tempo;
+            if((j+1)%etapas == 0)
+            {
+                ola = novo[j].id_piloto;
+                tempos[ola-1] = cont;
+                cont = 0;
+            }
+        }
     }
+    for (int j = 0; j < pilotos; j++) {
+        if(tempos[j] > maior)
+        {
+            maior = tempos[j];
+            maiorN = j;
+        }
+        if(tempos[j] < menor)
+        {
+            menor = tempos[j];
+            menorN = j;
+        }
+    }
+    printf("Maior \nTempo -> %d\nID -> %d\n\nMenor \nTempo -> %d\nID -> %d\n",maior,maiorN+1,menor,menorN+1);
+    fclose(file);
+
 }
 
 int main() {
@@ -354,15 +463,16 @@ int main() {
             case 1: ReadPilotos();break;
             case 2: ReadEtapas();break;
             case 3:                 do {
-                    printf("\n\n1 - Todos pilotos\n2 - Validos\n3 - Listar\n4 - Medias\n0 - Voltar\nOpcao -> "); scanf("%d",&opcaoE);
+                    printf("\n\n1 - Todos pilotos\n2 - Validos\n3 - Listar\n4 - Medias\n5 - Mais Rapido/Mais lento\n0 - Voltar\nOpcao -> "); scanf("%d",&opcaoE);
                     printf("\n");
                     switch (opcaoE) {
                         case 1: TodosPilotos(); break;
                         case 2: Validos(); break;
                         case 3: ListarCorridas(); break;
                         case 4: medias(); break;
+                        case 5: Rapido_Lento(); break;
                     }
-                } while (opcaoE < 1 && opcaoE > 4 || opcaoE != 0);
+                } while (opcaoE < 1 && opcaoE > 5 || opcaoE != 0);
                 printf("\n");
                 break;
         }
