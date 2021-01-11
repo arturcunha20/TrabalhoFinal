@@ -101,7 +101,6 @@ void ReadCorridas()
         {
             sscanf( linha, "%d;%d", &etapas,&pilotos);
             printf("Etapas -> %d | Pilotos -> %d\n",etapas,pilotos);
-
         }
         else
         {
@@ -173,12 +172,10 @@ void ReadCorridas()
         }
     }
 
-
-
     for (int j = 0; j < 100; ++j) {
         if (novo[j].id_piloto != 0)
         {
-            printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d\n",novo[j].id_piloto,novo[j].incio,novo[j].fim,novo[j].tempo);
+            printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d \n",novo[j].id_piloto,novo[j].incio,novo[j].fim,novo[j].tempo);
         }
     }
 
@@ -199,7 +196,7 @@ void ReadPilotos()
     {
         res = fscanf(file,"%d;%[^;];%[^;];\n",&p.id ,&p.nome ,&p.marca);
 
-        printf("Id -> %d | Nome -> %s | Marca -> %s\n\n",p.id ,p.nome ,p.marca);
+        printf("Id -> %d | Nome -> %s | Marca -> %s\n",p.id ,p.nome ,p.marca);
 
     }
 
@@ -207,11 +204,27 @@ void ReadPilotos()
     fclose(file);
 }
 int main() {
+    int opcao;
     //InsertPiloto();
     //InsertPiloto();
 
     //ReadPilotos();
     //ReadEtapas();
-    ReadCorridas();
+    //ReadCorridas();
+
+    printf("Pilotos\n");
+    printf("Etapas\n");
+    printf("Corrida\n");
+
+    do {
+        printf("Diga a opcao -> "); scanf("%d",&opcao);
+
+        switch (opcao) {
+            case 1: ReadPilotos();break;
+            case 2: ReadEtapas();break;
+            case 3: ReadCorridas();break;
+        }
+    } while (opcao!=0);
+
     return 0;
 }
