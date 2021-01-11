@@ -83,7 +83,11 @@ void ReadCorridas()
     int etapas,pilotos,i=0;
     char linha[1024];
     FILE *file;
-    Corrida c;
+    Corrida c,novo[100],aux;
+
+    for (int j = 0; j < 100; ++j) {
+            novo[j].id_piloto = 0;
+    }
 
     file = fopen("../Corridas.txt","r");
     while (!feof(file))
@@ -102,11 +106,84 @@ void ReadCorridas()
         else
         {
             sscanf( linha, "%d;%[^;];%[^;];%d", &c.id_piloto, &c.incio, &c.fim, &c.tempo );
-            printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d\n",c.id_piloto,c.incio,c.fim,c.tempo);
+            //printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d\n",c.id_piloto,c.incio,c.fim,c.tempo);
+            novo[i-1].id_piloto = c.id_piloto;
+            strcpy(novo[i-1].incio,c.incio);
+            strcpy(novo[i-1].fim,c.fim);
+            novo[i-1].tempo = c.tempo;
         }
         i++;
     }
-    printf("Estao %d pilotos",pilotos);
+
+
+
+
+
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            for (int i = 0; i < 100; ++i) {
+                if (novo[i].id_piloto != 0)
+                {
+                    if(novo[i].id_piloto >= novo[j].id_piloto)
+                    {
+                        aux = novo[i];
+                        novo[i] = novo[j];
+                        novo[j] = aux;
+                    }
+                }
+            }
+        }
+    }
+
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            for (int i = 0; i < 100; ++i) {
+                if (novo[i].id_piloto != 0)
+                {
+                    if(novo[i].id_piloto == novo[j].id_piloto)
+                    {
+                        if(novo[i].tempo >= novo[j].tempo)
+                        {
+                            aux  = novo[i];
+                            novo[i] = novo[j];
+                            novo[j] = aux;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    int cont =0,contValidos = 0;
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            if(novo[j].tempo > 0)
+            {
+                cont++;
+            }
+
+            if(cont == etapas)
+            {
+                contValidos++;
+                cont = 0;
+            }
+        }
+    }
+
+
+
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d\n",novo[j].id_piloto,novo[j].incio,novo[j].fim,novo[j].tempo);
+        }
+    }
+
+    printf("\n\nEstao %d pilotos \n",pilotos);
+    printf("Estao %d pilotos validos",contValidos);
     fclose(file);
 }
 
