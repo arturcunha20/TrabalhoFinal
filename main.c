@@ -412,8 +412,6 @@ void Rapido_Lento()
         }
     }
 
-
-
     for (int j = 0; j < 100; ++j) {
         if (novo[j].id_piloto != 0)
         {
