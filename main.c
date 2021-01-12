@@ -446,12 +446,11 @@ int main() {
     //ReadPilotos();
     //ReadEtapas();
     //ReadCorridas();
-
-    printf("1 - Pilotos\n");
-    printf("2 - Etapas\n");
-    printf("3 - Corrida\n");
-
+    
     do {
+        printf("1 - Pilotos\n");
+        printf("2 - Etapas\n");
+        printf("3 - Corrida\n");
         printf("Diga a opcao -> "); scanf("%d",&opcao);
 
         switch (opcao) {
