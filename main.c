@@ -30,7 +30,7 @@ void ReadPilotos()
     int res;
     FILE *file;
     Piloto p;
-
+    printf("\n");
     file = fopen("../Pilotos.txt","r");
     while (!feof(file))
     {
@@ -40,7 +40,7 @@ void ReadPilotos()
 
     }
 
-    printf("\n\n");
+    printf("\n");
     fclose(file);
 }
 
@@ -50,16 +50,17 @@ void ReadEtapas()
     FILE *file;
     Etapa e;
 
+    printf("\n");
     file = fopen("../Etapas.txt","r");
     while (!feof(file))
     {
         res = fscanf(file,"%[^;];%[^;];%f\n",&e.inicio ,&e.fim ,&e.distancia);
 
-        printf("Inicio -> %s | Fim -> %s | Distancia -> %.5f\n\n",e.inicio,e.fim ,e.distancia);
+        printf("Inicio -> %s | Fim -> %s | Distancia -> %.2f KM\n",e.inicio,e.fim ,e.distancia);
 
     }
 
-    printf("\n\n");
+    printf("\n");
     fclose(file);
 }
 
