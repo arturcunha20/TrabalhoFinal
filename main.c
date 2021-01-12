@@ -352,9 +352,29 @@ void medias()
     fclose(fileE);
 
     for (int k = 0; k < as; k++) {
-            printf("%s %s",inicio[k],fim[k]);
-            printf("\n");
+        printf("%s %s",inicio[k],fim[k]);
+        printf("\n");
     }
+    int tempos[3];
+    printf("\n");
+    for (int k = 0; k < (pilotos*etapas); k++) {
+        for (int j = 0; j < as; j++) {
+            if(strcmp(inicio[j],novo[k].incio) == 0 && strcmp(fim[j],novo[k].fim) == 0 )
+            {
+                for (int l = 0; l < as; ++l) {
+                    if(strcmp(novo[k].incio,inicio[l]) == 0)
+                    {
+                        tempos[l] = tempos[l]+novo[k].tempo;
+                    }
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < etapas; i++) {
+        printf("%d\n",tempos[i]);
+    }
+
 }
 
 void Rapido_Lento()
@@ -446,7 +466,7 @@ int main() {
     //ReadPilotos();
     //ReadEtapas();
     //ReadCorridas();
-    
+
     do {
         printf("1 - Pilotos\n");
         printf("2 - Etapas\n");
