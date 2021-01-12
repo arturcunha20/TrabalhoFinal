@@ -170,7 +170,7 @@ void TodosPilotos()
         }
     }
     */
-    printf("Estao %d pilotos validos\n\n",pilotos);
+    printf("Estao %d pilotos\n\n",pilotos);
     fclose(file);
 
 }
@@ -282,7 +282,7 @@ void medias()
     char linha[1024];
     FILE *file,*fileE;
     Corrida c,novo[100],aux;
-    char inicio[2][10],fim[2][10];
+    char *inicio[10][10][1024],*fim[10][10][1024];
 
     for (int j = 0; j < 100; ++j) {
         novo[j].id_piloto = 0;
@@ -316,48 +316,45 @@ void medias()
     float distancia;
     char incioString[10],fimString[10];
 
-    for (int j = 0; j < 10; ++j) {
-        for (int k = 0; k < 10; ++k) {
-            inicio[k][j] = ' ';
-            fim[k][j] = ' ';
-        }
-    }
 
     fileE = fopen("../Etapas.txt","r");
     while (!feof(fileE))
     {
         fscanf(fileE,"%[^;];%[^;];%f\n",incioString ,fimString ,&distancia);
-        //printf("%s %s | \n",incioString,fimString);
 
-        for(i=0;i<10;i++)
+
+        for(i=0;i<3;i++)
         {
-            inicio[i][as] = incioString[i];
-            fim[i][as] = fimString[i];
+            strcpy(inicio[as][i],incioString);
+            strcpy(fim[as][i],fimString);
         }
+        /*
+        for(i=0;i<2;i++)
+        {
+            printf("%s",inicio[as][i]);
+            //fim[i][as] = fimString[i];
+        }
+        printf(" ");
+
+        for(i=0;i<2;i++)
+        {
+            printf("%c",fim[as][i]);
+            //fim[i][as] = fimString[i];
+        }
+
+        printf("\n");
+        */
+        //printf("\n\n\n",inicio[i][as]);
+        //printf("%s %s\n",incioString[i],fimString[i]);
         as++;
 
     }
     fclose(fileE);
 
-    int media[etapas];
-
-    for (int j = 0; j < 100; ++j) {
-        if (novo[j].id_piloto != 0)
-        {
-
-        }
+    for (int k = 0; k < as; k++) {
+            printf("%s %s",inicio[k],fim[k]);
+            printf("\n");
     }
-
-
-    for (int j = 0; j < 10; ++j) {
-        for (int k = 0; k < 10; ++k) {
-            if(inicio[k][j] != ' ')
-            {
-                printf("%c",inicio[k][j]);
-            }
-        }
-    }
-
 }
 
 void Rapido_Lento()
