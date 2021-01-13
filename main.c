@@ -538,6 +538,7 @@ void velocidadeMedia()
     FILE *file;
     Corrida c,novo[100],aux;
 
+
     for (int j = 0; j < 100; ++j) {
         novo[j].id_piloto = 0;
     }
@@ -607,25 +608,54 @@ void velocidadeMedia()
         }
     }
 
+    int velocidadesTotal[pilotos];
+    float horas[pilotos];
     for (int k = 0; k < pilotos; k++) {
+        velocidadesTotal[k] = 0;
         for (int j = 0; j < etapas; j++) {
-            printf("%d ",velocidades[k][j]);
+            velocidadesTotal[k] = velocidadesTotal[k] + velocidades[k][j];
         }
-        printf("\n");
+    }
+
+    for (int k = 0; k < pilotos; k++) {
+        horas[k] = velocidadesTotal[k]*2.7777777777778E-7;
     }
 
 
+    float distancia,dis;
+    FILE *fileE;
+    char incioString[10],fimString[10],as=0;
 
+    fileE = fopen("../Etapas.txt","r");
+    while (!feof(fileE))
+    {
+        fscanf(fileE,"%[^;];%[^;];%f\n",incioString ,fimString ,&dis);
+        distancia = distancia + dis;
+        as++;
+    }
+    fclose(fileE);
 
-    /*
-    for (int j = 0; j < 100; ++j) {
-        if (novo[j].id_piloto != 0)
-        {
-            printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d \n",novo[j].id_piloto,novo[j].incio,novo[j].fim,novo[j].tempo);
+    Piloto p[pilotos];
+    FILE *fileP;
+    as = 0;
+    fileP = fopen("../Pilotos.txt","r");
+    while (!feof(fileP))
+    {
+        fscanf(fileP,"%d;%[^;];%[^;];\n",&p[as].id ,&p[as].nome ,&p[as].marca);
+        as++;
+    }
+    fclose(fileE);
+
+    float velocidadeMedia;
+    for (int k = 0; k < pilotos; k++) {
+        for (int i = 0; i <= pilotos+1; i++) {
+            if (i == p[k].id)
+            {
+                velocidadeMedia = (float)(distancia/horas[k]);
+                printf("%s -> %.2f KM/H\n",p[k].nome,velocidadeMedia);
+            }
         }
     }
-    */
-
     fclose(file);
 }
 
