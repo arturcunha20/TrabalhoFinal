@@ -346,7 +346,7 @@ void medias()
     }
 
     for (int i = 0; i < etapas; i++) {
-        printf("Etapa %s-%s -> %.2f",inicio[i],fim[i],(float)tempos[i]/pilotos);
+        printf("Etapa %s-%s -> %.2f\n",inicio[i],fim[i],(float)tempos[i]/pilotos);
     }
 }
 
