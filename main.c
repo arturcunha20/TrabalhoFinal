@@ -25,6 +25,12 @@ typedef struct
     int tempo;
 }Corrida;
 
+typedef struct
+{
+    int id_piloto;
+    int tempo;
+}Tempos;
+
 void ReadPilotos()
 {
     int res;
@@ -34,7 +40,7 @@ void ReadPilotos()
     file = fopen("../Pilotos.txt","r");
     while (!feof(file))
     {
-        res = fscanf(file,"%d;%[^;];%[^;];\n",&p.id ,&p.nome ,&p.marca);
+        res = fscanf(file,"%d;%[^;];%s\n",&p.id ,&p.nome ,&p.marca);
 
         printf("Id -> %d | Nome -> %s | Marca -> %s\n",p.id ,p.nome ,p.marca);
 
@@ -251,22 +257,6 @@ void ListarCorridas()
         }
     }
 
-    int cont =0,contValidos = 0;
-    for (int j = 0; j < 100; ++j) {
-        if (novo[j].id_piloto != 0)
-        {
-            if(novo[j].tempo > 0)
-            {
-                cont++;
-            }
-
-            if(cont == etapas)
-            {
-                contValidos++;
-                cont = 0;
-            }
-        }
-    }
 
     for (int j = 0; j < (etapas*pilotos); ++j) {
         if (novo[j].id_piloto != 0)
@@ -344,9 +334,11 @@ void medias()
             }
         }
     }
-
+    float ola;
     for (int i = 0; i < etapas; i++) {
-        printf("Etapa %s-%s -> %.2f\n",inicio[i],fim[i],(float)tempos[i]/pilotos);
+        ola = 0;
+        ola = tempos[i]/pilotos;
+        printf("Etapa %s-%s -> %.2f\n",inicio[i],fim[i],ola);
     }
 }
 
@@ -626,12 +618,6 @@ void velocidadeMedia()
         }
     }
 
-
-    for (int k = 0; k < pilotos; k++) {
-        horas[k] = velocidadesTotal[k]*2.7777777777778E-7;
-    }
-
-
     float distancia,dis;
     FILE *fileE;
     char incioString[10],fimString[10],as=0;
@@ -651,10 +637,11 @@ void velocidadeMedia()
     fileP = fopen("../Pilotos.txt","r");
     while (!feof(fileP))
     {
-        fscanf(fileP,"%d;%[^;];%[^;];\n",&p[as].id ,&p[as].nome ,&p[as].marca);
+        fscanf(fileP,"%d;%[^;];%s\n",&p[as].id ,&p[as].nome ,&p[as].marca);
         as++;
     }
-    fclose(fileE);
+    fclose(fileP);
+
 
 
     float velocidadeMedia;
@@ -664,19 +651,168 @@ void velocidadeMedia()
             {
                 if(velocidadesTotal[k] != 0)
                 {
-                    velocidadeMedia = (float)(distancia/horas[k]);
-                    printf("%s -> %.2f KM/H\n",p[k].nome,velocidadeMedia);
+                    velocidadeMedia = (float)(distancia/(velocidadesTotal[k]*2.7777777777778E-7));
+                    printf("%s (%s) -> %.2f KM/H\n",p[k].nome,p[k].marca,velocidadeMedia);
                 }
                 else
                 {
-                    velocidadeMedia = (float)(distancia/horas[k]);
-                    printf("%s -> Tempo Invalido\n",p[k].nome);
+                    printf("%s (%s) -> Tempo Invalido\n",p[k].nome,p[k].marca);
                 }
 
             }
         }
     }
     fclose(file);
+}
+
+void Tabela()
+{
+    int etapas,pilotos,i=0;
+    char linha[1024];
+    FILE *file;
+    Corrida c,novo[100],aux;
+
+    for (int j = 0; j < 100; ++j) {
+        novo[j].id_piloto = 0;
+    }
+
+    file = fopen("../Corridas.txt","r");
+    while (!feof(file))
+    {
+        fscanf(file,"%s\n",&linha);
+        c.id_piloto = 0;
+        c.tempo = 0;
+        strcpy(c.incio,"-");
+        strcpy(c.fim,"-");
+        if(i == 0)
+        {
+            sscanf( linha, "%d;%d", &etapas,&pilotos);
+        }
+        else
+        {
+            sscanf( linha, "%d;%[^;];%[^;];%d", &c.id_piloto, &c.incio, &c.fim, &c.tempo);
+            novo[i-1].id_piloto = c.id_piloto;
+            strcpy(novo[i-1].incio,c.incio);
+            strcpy(novo[i-1].fim,c.fim);
+            novo[i-1].tempo = c.tempo;
+        }
+        i++;
+    }
+
+
+    Piloto p[pilotos];
+    FILE *fileP;
+    int as = 0;
+    fileP = fopen("../Pilotos.txt","r");
+    while (!feof(fileP))
+    {
+        fscanf(fileP,"%d;%[^;];%s\n",&p[as].id ,&p[as].nome ,&p[as].marca);
+        as++;
+    }
+    fclose(fileP);
+
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            for (int i = 0; i < 100; ++i) {
+                if (novo[i].id_piloto != 0)
+                {
+                    if(novo[i].id_piloto >= novo[j].id_piloto)
+                    {
+                        aux = novo[i];
+                        novo[i] = novo[j];
+                        novo[j] = aux;
+                    }
+                }
+            }
+        }
+    }
+
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            for (int i = 0; i < 100; ++i) {
+                if (novo[i].id_piloto != 0)
+                {
+                    if(novo[i].id_piloto == novo[j].id_piloto)
+                    {
+                        if(novo[i].tempo >= novo[j].tempo)
+                        {
+                            aux  = novo[i];
+                            novo[i] = novo[j];
+                            novo[j] = aux;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    int cont =0;
+    Tempos eee[pilotos];
+
+    for (int j = 0; j < pilotos; ++j) {
+        eee[j].id_piloto = 0;
+        eee[j].tempo = 0;
+    }
+
+    i=0;
+    for (int j = 0; j < 100; j++) {
+        if (novo[j].id_piloto != 0)
+        {
+            if(novo[j].tempo > 0)
+            {
+                cont++;
+            }
+
+            if(cont == etapas)
+            {
+                for (int k = 0; k < pilotos; k++) {
+                    for (int j = 0; j < etapas; j++) {
+                        eee[k].tempo = eee[k].tempo + novo[i].tempo;
+                        eee[k].id_piloto = novo[i].id_piloto;
+                        printf("%d ",novo[i].tempo);
+                        i++;
+                    }
+                }
+            }
+
+        }
+
+    }
+    printf("\n\n\n");
+
+    for (int j = 0; j < (pilotos*etapas); ++j) {
+        printf("%d -> %d\n",novo[j].id_piloto,novo[j].tempo);
+    }
+
+
+    Tempos aux1;
+    for (int j = 0; j < pilotos; ++j) {
+        for (int i = 0; i < pilotos; ++i) {
+             if(eee[i].tempo > eee[j].tempo)
+             {
+                 aux1 = eee[i];
+                 eee[i] = eee[j];
+                 eee[j] = aux1;
+             }
+
+        }
+    }
+
+
+
+    for (int k = 0; k < pilotos; k++) {
+        for (int i = 0; i <= as; i++) {
+            if (eee[k].id_piloto == p[i].id)
+            {
+                printf("ID -> %d | Nome -> %s | Marca -> %s | Tempo-> %d \n",p[i].id,p[i].nome,p[i].marca,eee[k].tempo);
+
+            }
+        }
+    }
+    fclose(file);
+
 }
 
 int main() {
@@ -687,7 +823,7 @@ int main() {
     //ReadPilotos();
     //ReadEtapas();
     //ReadCorridas();
-    //ola
+
     do {
         printf("1 - Pilotos\n");
         printf("2 - Etapas\n");
@@ -698,7 +834,7 @@ int main() {
             case 1: ReadPilotos();break;
             case 2: ReadEtapas();break;
             case 3:                 do {
-                    printf("\n\n1 - Todos pilotos\n2 - Validos\n3 - Listar\n4 - Medias\n5 - Mais Rapido/Mais lento\n6 - Tempo minimo\n7 - Velocidade Media\n0 - Voltar\nOpcao -> "); scanf("%d",&opcaoE);
+                    printf("\n\n1 - Todos pilotos\n2 - Validos\n3 - Listar\n4 - Medias\n5 - Mais Rapido/Mais lento\n6 - Tempo minimo\n7 - Velocidade Media\n8 - Tabela Classificatoria\n0 - Voltar\nOpcao -> "); scanf("%d",&opcaoE);
                     printf("\n");
                     switch (opcaoE) {
                         case 1: TodosPilotos(); break;
@@ -707,9 +843,10 @@ int main() {
                         case 4: medias(); break;
                         case 5: Rapido_Lento(); break;
                         case 6: tempo_minimo(); break;
-                        case 7:velocidadeMedia();break;
+                        case 7: velocidadeMedia();break;
+                        case 8: Tabela();break;
                     }
-                } while (opcaoE < 1 && opcaoE > 6 || opcaoE != 0);
+                } while (opcaoE < 1 && opcaoE > 7 || opcaoE != 0);
                 printf("\n");
                 break;
         }
