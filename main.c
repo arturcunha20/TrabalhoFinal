@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#define SEPARADOR -14
 
 typedef struct
 {
@@ -28,7 +29,10 @@ typedef struct
 typedef struct
 {
     int id_piloto;
+    char nome[50];
+    char marca[50];
     int tempo;
+
 }Tempos;
 
 void ReadPilotos()
@@ -506,21 +510,26 @@ void Rapido_Lento()
             }
         }
     }
+
+
     for (int j = 0; j < pilotos; j++) {
         if(tempos[j] > maior)
         {
             maior = tempos[j];
             maiorN = j;
         }
+    }
+
+    for (int j = 0; j < pilotos; j++) {
         if(tempos[j] < menor)
         {
             menor = tempos[j];
             menorN = j;
         }
     }
+
     printf("Mais Lento \nTempo -> %d\nID -> %d\n\nMais Rapido \nTempo -> %d\nID -> %d\n",maior,maiorN+1,menor,menorN+1);
     fclose(file);
-
 }
 
 void velocidadeMedia()
@@ -757,6 +766,7 @@ void Tabela()
     }
 
     i=0;
+    char nome[50],marca[50];
     for (int j = 0; j < 100; j++) {
         if (novo[j].id_piloto != 0)
         {
@@ -780,7 +790,22 @@ void Tabela()
 
     }
 
+    for (int j = 0; j < pilotos; ++j) {
+        for (int j = 0; j < as; ++j) {
+            if (eee[j].id_piloto == p[j].id)
+            {
+                strcpy(eee[j].nome,p[j].nome);
+                strcpy(eee[j].marca,p[j].marca);
+            }
+        }
+    }
+
+    for (int j = 0; j < pilotos; ++j) {
+        printf("%d %s %s %d\n",eee[j].id_piloto,eee[j].nome,eee[j].marca,eee[j].tempo);
+    }
+
     Tempos aux1;
+
     for (int j = 0; j < pilotos; ++j) {
         for (int i = 0; i < pilotos; ++i) {
              if(eee[i].tempo > eee[j].tempo)
@@ -792,27 +817,83 @@ void Tabela()
 
         }
     }
+
+
+    printf("%*s | %*s | %*s | %*s | %*s | %*s | %*s \n",
+           SEPARADOR, "Posicao",
+           SEPARADOR, "Numero",
+           SEPARADOR, "Nome",
+           SEPARADOR, "Marca",
+           SEPARADOR, "Tempo",
+           SEPARADOR, "Di.Ant",
+           SEPARADOR, "Di.Ldr"
+    );
+
     int z=0;
+    int tempAnt,tempLed;
     for (int k = 0; k < pilotos; k++) {
         for (int i = 0; i <= as; i++) {
             if (eee[k].id_piloto == p[i].id)
             {
-                printf("%d | ID -> %d | Nome -> %s | Marca -> %s | Tempo-> %d \n",z+1,p[i].id,p[i].nome,p[i].marca,eee[k].tempo);
+                if(z == 0)
+                {
+                    printf("%*d | %*d | %*s | %*s | %*d | %*s | %*s \n",
+                           SEPARADOR, z+1,
+                           SEPARADOR, eee[k].id_piloto,
+                           SEPARADOR, eee[k].nome,
+                           SEPARADOR, eee[k].marca,
+                           SEPARADOR, eee[k].tempo,
+                           SEPARADOR, "0.0",
+                           SEPARADOR, "0.0"
+
+                    );
+                }
+                else
+                {
+                    tempAnt = eee[k].tempo - eee[k - 1].tempo;
+                    tempLed = eee[k].tempo - eee[0].tempo;
+                    printf("%*d | %*d | %*s | %*s | %*d | %*d | %*d \n",
+                           SEPARADOR, z + 1,
+                           SEPARADOR, eee[k].id_piloto,
+                           SEPARADOR, eee[k].nome,
+                           SEPARADOR, eee[k].marca,
+                           SEPARADOR, eee[k].tempo,
+                           SEPARADOR, tempAnt,
+                           SEPARADOR, tempLed
+
+                    );
+                    //printf("%d | Numero -> %d | Nome -> %s | Marca -> %s | Tempo-> %d | Di.Ant -> %d | Di.Ldr -> %d\n",z+1,p[i].id,p[i].nome,p[i].marca,eee[k].tempo,tempAnt,tempLed);
+                }
                 z++;
             }
         }
     }
-    z=0;
-    for (int k = 0; k < pilotos; k++) {
-        for (int i = 0; i <= as; i++) {
-            if (eee[k].id_piloto == p[i].id)
-            {
 
-                z++;
-            }
-            if (z == 0)
-            {
-                printf("- | ID -> %d | Nome -> %s | Marca -> %s | Tempo-> - \n",p[i].id,p[i].nome,p[i].marca);
+    z=0;
+    int kk=0;
+    if(as != pilotos)
+    {
+        for (int k = 0; k < as; k++) {
+            z=0;
+            for (int i = 0; i < pilotos; i++) {
+
+                if (eee[i].id_piloto == p[k].id)
+                {
+                    z++;
+                }
+                if(i%pilotos == pilotos-1 && z == 0)
+                {
+                    printf("%*s | %*d | %*s | %*s | %*s | %*s | %*s \n",
+                           SEPARADOR, "-",
+                           SEPARADOR, eee[k].id_piloto,
+                           SEPARADOR, eee[k].nome,
+                           SEPARADOR, eee[k].marca,
+                           SEPARADOR, "-",
+                           SEPARADOR, "-",
+                           SEPARADOR, "-"
+
+                    );
+                }
             }
         }
     }
