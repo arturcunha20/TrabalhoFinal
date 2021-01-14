@@ -698,9 +698,9 @@ void Tabela()
         }
         i++;
     }
+    fclose(file);
 
-
-    Piloto p[pilotos];
+    Piloto p[100];
     FILE *fileP;
     int as = 0;
     fileP = fopen("../Pilotos.txt","r");
@@ -771,7 +771,6 @@ void Tabela()
                     for (int j = 0; j < etapas; j++) {
                         eee[k].tempo = eee[k].tempo + novo[i].tempo;
                         eee[k].id_piloto = novo[i].id_piloto;
-                        printf("%d ",novo[i].tempo);
                         i++;
                     }
                 }
@@ -780,12 +779,6 @@ void Tabela()
         }
 
     }
-    printf("\n\n\n");
-
-    for (int j = 0; j < (pilotos*etapas); ++j) {
-        printf("%d -> %d\n",novo[j].id_piloto,novo[j].tempo);
-    }
-
 
     Tempos aux1;
     for (int j = 0; j < pilotos; ++j) {
@@ -799,19 +792,30 @@ void Tabela()
 
         }
     }
-
-
-
+    int z=0;
     for (int k = 0; k < pilotos; k++) {
         for (int i = 0; i <= as; i++) {
             if (eee[k].id_piloto == p[i].id)
             {
-                printf("ID -> %d | Nome -> %s | Marca -> %s | Tempo-> %d \n",p[i].id,p[i].nome,p[i].marca,eee[k].tempo);
-
+                printf("%d | ID -> %d | Nome -> %s | Marca -> %s | Tempo-> %d \n",z+1,p[i].id,p[i].nome,p[i].marca,eee[k].tempo);
+                z++;
             }
         }
     }
-    fclose(file);
+    z=0;
+    for (int k = 0; k < pilotos; k++) {
+        for (int i = 0; i <= as; i++) {
+            if (eee[k].id_piloto == p[i].id)
+            {
+
+                z++;
+            }
+            if (z == 0)
+            {
+                printf("- | ID -> %d | Nome -> %s | Marca -> %s | Tempo-> - \n",p[i].id,p[i].nome,p[i].marca);
+            }
+        }
+    }
 
 }
 
