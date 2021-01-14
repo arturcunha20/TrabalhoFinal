@@ -613,9 +613,19 @@ void velocidadeMedia()
     for (int k = 0; k < pilotos; k++) {
         velocidadesTotal[k] = 0;
         for (int j = 0; j < etapas; j++) {
-            velocidadesTotal[k] = velocidadesTotal[k] + velocidades[k][j];
+            if (velocidades[k][j] != 0)
+            {
+                velocidadesTotal[k] = velocidadesTotal[k] + velocidades[k][j];
+            }
+            else
+            {
+                velocidadesTotal[k] = 0;
+                break;
+            }
+
         }
     }
+
 
     for (int k = 0; k < pilotos; k++) {
         horas[k] = velocidadesTotal[k]*2.7777777777778E-7;
@@ -646,13 +656,23 @@ void velocidadeMedia()
     }
     fclose(fileE);
 
+
     float velocidadeMedia;
     for (int k = 0; k < pilotos; k++) {
         for (int i = 0; i <= pilotos+1; i++) {
             if (i == p[k].id)
             {
-                velocidadeMedia = (float)(distancia/horas[k]);
-                printf("%s -> %.2f KM/H\n",p[k].nome,velocidadeMedia);
+                if(velocidadesTotal[k] != 0)
+                {
+                    velocidadeMedia = (float)(distancia/horas[k]);
+                    printf("%s -> %.2f KM/H\n",p[k].nome,velocidadeMedia);
+                }
+                else
+                {
+                    velocidadeMedia = (float)(distancia/horas[k]);
+                    printf("%s -> Tempo Invalido\n",p[k].nome);
+                }
+
             }
         }
     }
