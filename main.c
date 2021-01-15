@@ -805,16 +805,16 @@ void Tabela()
 
     for (int j = 0; j < pilotos; ++j) {
         for (int i = 0; i < pilotos; ++i) {
-             if(eee[i].tempo > eee[j].tempo)
-             {
-                 aux1 = eee[i];
-                 eee[i] = eee[j];
-                 eee[j] = aux1;
-             }
+            if(eee[i].tempo > eee[j].tempo)
+            {
+                aux1 = eee[i];
+                eee[i] = eee[j];
+                eee[j] = aux1;
+            }
 
         }
     }
-    
+
     printf("%*s | %*s | %*s | %*s | %*s | %*s | %*s \n",
            SEPARADOR, "Posicao",
            SEPARADOR, "Numero",
@@ -893,7 +893,6 @@ void Tabela()
             }
         }
     }
-
 }
 
 int main() {
