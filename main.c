@@ -800,10 +800,6 @@ void Tabela()
         }
     }
 
-    for (int j = 0; j < pilotos; ++j) {
-        printf("%d %s %s %d\n",eee[j].id_piloto,eee[j].nome,eee[j].marca,eee[j].tempo);
-    }
-
     Tempos aux1;
 
     for (int j = 0; j < pilotos; ++j) {
