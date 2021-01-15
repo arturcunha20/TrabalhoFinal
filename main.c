@@ -790,14 +790,15 @@ void Tabela()
 
     }
 
-    for (int j = 0; j < pilotos; ++j) {
-        for (int j = 0; j < as; ++j) {
-            if (eee[j].id_piloto == p[j].id)
+    for (int j = 0; j < as; ++j) {
+        for (int k = 0; k < as; ++k) {
+            if (eee[j].id_piloto == p[k].id)
             {
-                strcpy(eee[j].nome,p[j].nome);
-                strcpy(eee[j].marca,p[j].marca);
+                strcpy(eee[j].nome,p[k].nome);
+                strcpy(eee[j].marca,p[k].marca);
             }
         }
+
     }
 
     Tempos aux1;
@@ -813,8 +814,7 @@ void Tabela()
 
         }
     }
-
-
+    
     printf("%*s | %*s | %*s | %*s | %*s | %*s | %*s \n",
            SEPARADOR, "Posicao",
            SEPARADOR, "Numero",
@@ -881,9 +881,9 @@ void Tabela()
                 {
                     printf("%*s | %*d | %*s | %*s | %*s | %*s | %*s \n",
                            SEPARADOR, "-",
-                           SEPARADOR, eee[k].id_piloto,
-                           SEPARADOR, eee[k].nome,
-                           SEPARADOR, eee[k].marca,
+                           SEPARADOR, p[k].id,
+                           SEPARADOR, p[k].nome,
+                           SEPARADOR, p[k].marca,
                            SEPARADOR, "-",
                            SEPARADOR, "-",
                            SEPARADOR, "-"
