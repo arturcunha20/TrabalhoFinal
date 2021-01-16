@@ -737,23 +737,47 @@ void Tabela()
         }
     }
 
+    int cont123 =0,contValidos = 0;
     for (int j = 0; j < 100; ++j) {
         if (novo[j].id_piloto != 0)
         {
-            for (int i = 0; i < 100; ++i) {
-                if (novo[i].id_piloto != 0)
-                {
-                    if(novo[i].id_piloto == novo[j].id_piloto)
-                    {
-                        if(novo[i].tempo >= novo[j].tempo)
-                        {
-                            aux  = novo[i];
-                            novo[i] = novo[j];
-                            novo[j] = aux;
-                        }
-                    }
-                }
+            if(novo[j].tempo > 0)
+            {
+                cont123++;
             }
+
+            if(cont123 == etapas)
+            {
+                contValidos++;
+                cont123 = 0;
+            }
+        }
+    }
+
+    Tempos novoT[contValidos];
+
+    int cont22=0,temp=0,ash=0;
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
+        {
+            if(novo[j].tempo > 0)
+            {
+                cont22++;
+                temp = temp + novo[j].tempo;
+            }
+
+            if ((j+1)%etapas == 0)
+            {
+                if (cont22 == etapas)
+                {
+                    novoT[ash].tempo = temp;
+                    novoT[ash].id_piloto = novo[j].id_piloto;
+                    ash++;
+                }
+                temp = 0;
+                cont22 = 0;
+            }
+
         }
     }
 
@@ -785,10 +809,10 @@ void Tabela()
                     }
                 }
             }
-
         }
-
     }
+
+
 
     for (int j = 0; j < as; ++j) {
         for (int k = 0; k < as; ++k) {
@@ -798,22 +822,36 @@ void Tabela()
                 strcpy(eee[j].marca,p[k].marca);
             }
         }
-
     }
 
-    Tempos aux1;
-
-    for (int j = 0; j < pilotos; ++j) {
-        for (int i = 0; i < pilotos; ++i) {
-            if(eee[i].tempo > eee[j].tempo)
+    for (int j = 0; j < contValidos; ++j) {
+        for (int k = 0; k < as; ++k) {
+            if (novoT[j].id_piloto == p[k].id)
             {
-                aux1 = eee[i];
-                eee[i] = eee[j];
-                eee[j] = aux1;
+                strcpy(novoT[j].nome,p[k].nome);
+                strcpy(novoT[j].marca,p[k].marca);
             }
-
         }
     }
+
+
+    Tempos ola123;
+
+    for (int j = 0; j < contValidos; ++j) {
+        for (int i = 0; i < contValidos; ++i) {
+            if(novoT[i].tempo > novoT[j].tempo)
+            {
+                ola123 = novoT[i];
+                novoT[i] = novoT[j];
+                novoT[j] = ola123;
+            }
+        }
+    }
+
+    for (int j = 0; j < contValidos; ++j) {
+        printf("%d %s %s %d\n",novoT[j].id_piloto,novoT[j].nome,novoT[j].marca,novoT[j].tempo);
+    }
+
 
     printf("%*s | %*s | %*s | %*s | %*s | %*s | %*s \n",
            SEPARADOR, "Posicao",
@@ -827,18 +865,18 @@ void Tabela()
 
     int z=0;
     int tempAnt,tempLed;
-    for (int k = 0; k < pilotos; k++) {
+    for (int k = 0; k < contValidos; k++) {
         for (int i = 0; i <= as; i++) {
-            if (eee[k].id_piloto == p[i].id)
+            if (novoT[k].id_piloto == p[i].id)
             {
                 if(z == 0)
                 {
                     printf("%*d | %*d | %*s | %*s | %*d | %*s | %*s \n",
                            SEPARADOR, z+1,
-                           SEPARADOR, eee[k].id_piloto,
-                           SEPARADOR, eee[k].nome,
-                           SEPARADOR, eee[k].marca,
-                           SEPARADOR, eee[k].tempo,
+                           SEPARADOR, novoT[k].id_piloto,
+                           SEPARADOR, novoT[k].nome,
+                           SEPARADOR, novoT[k].marca,
+                           SEPARADOR, novoT[k].tempo,
                            SEPARADOR, "0.0",
                            SEPARADOR, "0.0"
 
@@ -846,14 +884,14 @@ void Tabela()
                 }
                 else
                 {
-                    tempAnt = eee[k].tempo - eee[k - 1].tempo;
-                    tempLed = eee[k].tempo - eee[0].tempo;
+                    tempAnt = novoT[k].tempo - novoT[k - 1].tempo;
+                    tempLed = novoT[k].tempo - novoT[0].tempo;
                     printf("%*d | %*d | %*s | %*s | %*d | %*d | %*d \n",
                            SEPARADOR, z + 1,
-                           SEPARADOR, eee[k].id_piloto,
-                           SEPARADOR, eee[k].nome,
-                           SEPARADOR, eee[k].marca,
-                           SEPARADOR, eee[k].tempo,
+                           SEPARADOR, novoT[k].id_piloto,
+                           SEPARADOR, novoT[k].nome,
+                           SEPARADOR, novoT[k].marca,
+                           SEPARADOR, novoT[k].tempo,
                            SEPARADOR, tempAnt,
                            SEPARADOR, tempLed
 
@@ -864,20 +902,42 @@ void Tabela()
             }
         }
     }
+    Tempos OLA;
+    for (int j = 0; j < contValidos; ++j) {
+        for (int i = 0; i < contValidos; ++i) {
+            if(novoT[i].id_piloto > novoT[j].id_piloto)
+            {
+                OLA = novoT[i];
+                novoT[i] = novoT[j];
+                novoT[j] = OLA;
+            }
+        }
+    }
+    Tempos kkkl;
+    for (int j = 0; j < pilotos; ++j) {
+        for (int i = 0; i < pilotos; ++i) {
+            if(eee[i].id_piloto > eee[j].id_piloto)
+            {
+                kkkl = eee[i];
+                eee[i] = eee[j];
+                eee[j] = kkkl;
+            }
+        }
+    }
 
     z=0;
-    int kk=0;
-    if(as != pilotos)
+    if(pilotos != contValidos)
     {
-        for (int k = 0; k < as; k++) {
+        for (int k = 0; k < pilotos; k++) {
             z=0;
-            for (int i = 0; i < pilotos; i++) {
+            for (int i = 0; i < contValidos; i++) {
 
-                if (eee[i].id_piloto == p[k].id)
+                if (novoT[i].id_piloto == eee[k].id_piloto)
                 {
                     z++;
+                    //printf("%d %d  %d   ",novoT[i].id_piloto,eee[k].id_piloto,z);
                 }
-                if(i%pilotos == pilotos-1 && z == 0)
+                if((i+1)%contValidos == 0 && z == 0)
                 {
                     printf("%*s | %*d | %*s | %*s | %*s | %*s | %*s \n",
                            SEPARADOR, "-",
