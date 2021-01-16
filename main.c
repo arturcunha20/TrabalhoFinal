@@ -267,7 +267,10 @@ void ListarCorridas()
         {
             printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d \n",novo[j].id_piloto,novo[j].incio,novo[j].fim,novo[j].tempo);
         }
-
+        if((j+1)%etapas == 0 )
+        {
+            printf("\n");
+        }
     }
     fclose(file);
 }
@@ -848,11 +851,6 @@ void Tabela()
         }
     }
 
-    for (int j = 0; j < contValidos; ++j) {
-        printf("%d %s %s %d\n",novoT[j].id_piloto,novoT[j].nome,novoT[j].marca,novoT[j].tempo);
-    }
-
-
     printf("%*s | %*s | %*s | %*s | %*s | %*s | %*s \n",
            SEPARADOR, "Posicao",
            SEPARADOR, "Numero",
@@ -865,6 +863,8 @@ void Tabela()
 
     int z=0;
     int tempAnt,tempLed;
+    FILE *fileTabela;
+
     for (int k = 0; k < contValidos; k++) {
         for (int i = 0; i <= as; i++) {
             if (novoT[k].id_piloto == p[i].id)
