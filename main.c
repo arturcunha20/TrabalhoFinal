@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #define SEPARADOR -14
+#define SEPARADORID -6
 
 typedef struct
 {
@@ -42,11 +43,22 @@ void ReadPilotos()
     Piloto p;
     printf("\n");
     file = fopen("../Pilotos.txt","r");
+    printf("%*s | %*s | %*s \n",
+           SEPARADORID, "ID",
+           SEPARADOR, "Nome",
+           SEPARADOR, "Marca"
+
+    );
     while (!feof(file))
     {
         res = fscanf(file,"%d;%[^;];%s\n",&p.id ,&p.nome ,&p.marca);
+        printf("%*d | %*s | %*s \n",
+               SEPARADORID, p.id,
+               SEPARADOR, p.nome,
+               SEPARADOR, p.marca
 
-        printf("Id -> %d | Nome -> %s | Marca -> %s\n",p.id ,p.nome ,p.marca);
+        );
+        //printf("Id -> %d | Nome -> %s | Marca -> %s\n",p.id ,p.nome ,p.marca);
 
     }
 
@@ -62,11 +74,22 @@ void ReadEtapas()
 
     printf("\n");
     file = fopen("../Etapas.txt","r");
+    printf("%*s | %*s | %*s \n",
+           SEPARADORID, "Inicio",
+           SEPARADOR, "Fim",
+           SEPARADOR, "Distancia (KM)"
+
+    );
     while (!feof(file))
     {
         res = fscanf(file,"%[^;];%[^;];%f\n",&e.inicio ,&e.fim ,&e.distancia);
+        printf("%*s | %*s | %*.2f \n",
+               SEPARADORID, e.inicio,
+               SEPARADOR, e.fim,
+               SEPARADOR, e.distancia
 
-        printf("Inicio -> %s | Fim -> %s | Distancia -> %.2f KM\n",e.inicio,e.fim ,e.distancia);
+        );
+        //printf("Inicio -> %s | Fim -> %s | Distancia -> %.2f KM\n",e.inicio,e.fim ,e.distancia);
 
     }
 
@@ -209,7 +232,7 @@ void ListarCorridas()
         if(i == 0)
         {
             sscanf( linha, "%d;%d", &etapas,&pilotos);
-            printf("Etapas -> %d | Pilotos -> %d\n",etapas,pilotos);
+
         }
         else
         {
@@ -260,16 +283,38 @@ void ListarCorridas()
             }
         }
     }
+    printf("Etapas -> %d | Pilotos -> %d\n\n",etapas,pilotos);
+    printf("%*s | %*s | %*s | %*s \n",
+           SEPARADORID, "ID",
+           SEPARADOR, "Inicio",
+           SEPARADOR, "Fim",
+           SEPARADOR, "Tempo"
 
-
+    );
     for (int j = 0; j < (etapas*pilotos); ++j) {
         if (novo[j].id_piloto != 0)
         {
-            printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d \n",novo[j].id_piloto,novo[j].incio,novo[j].fim,novo[j].tempo);
+            printf("%*d | %*s | %*s | %*d \n",
+                   SEPARADORID, novo[j].id_piloto,
+                   SEPARADOR, novo[j].incio,
+                   SEPARADOR, novo[j].fim,
+                   SEPARADOR, novo[j].tempo
+            );
+            //printf("ID -> %d | Incio -> %s | Fim -> %s | Tempo-> %d \n",novo[j].id_piloto,novo[j].incio,novo[j].fim,novo[j].tempo);
         }
         if((j+1)%etapas == 0 )
         {
-            printf("\n");
+            if(j != etapas*pilotos-1)
+            {
+                printf("\n\n");
+                printf("%*s | %*s | %*s | %*s \n",
+                       SEPARADORID, "ID",
+                       SEPARADOR, "Inicio",
+                       SEPARADOR, "Fim",
+                       SEPARADOR, "Tempo"
+                );
+            }
+
         }
     }
     fclose(file);
@@ -451,7 +496,8 @@ void tempo_minimo()
 
 void Rapido_Lento()
 {
-    int etapas,pilotos,i=0,tempos[pilotos],ola,cont =0,maior=1,menor=214748347,maiorN=0,menorN=0;
+    printf("\n");
+    int etapas,pilotos,i=0,tempos[pilotos],ola = 0,cont =0,maior=1,menor=214748347,maiorN=0,menorN=0;
     char linha[1024];
     FILE *file;
     Corrida c,novo[100],aux;
@@ -483,6 +529,18 @@ void Rapido_Lento()
         }
         i++;
     }
+    fclose(file);
+
+    Piloto p[100];
+    FILE *fileP;
+    int as = 0;
+    fileP = fopen("../Pilotos.txt","r");
+    while (!feof(fileP))
+    {
+        fscanf(fileP,"%d;%[^;];%s\n",&p[as].id ,&p[as].nome ,&p[as].marca);
+        as++;
+    }
+    fclose(fileP);
 
     for (int j = 0; j < 100; ++j) {
         if (novo[j].id_piloto != 0)
@@ -500,39 +558,92 @@ void Rapido_Lento()
             }
         }
     }
-
+    int cont123 =0,contValidos = 0;
     for (int j = 0; j < 100; ++j) {
         if (novo[j].id_piloto != 0)
         {
-            cont = cont + novo[j].tempo;
-            if((j+1)%etapas == 0)
+            if(novo[j].tempo > 0)
             {
-                ola = novo[j].id_piloto;
-                tempos[ola-1] = cont;
-                cont = 0;
+                cont123++;
+            }
+
+            if(cont123 == etapas)
+            {
+                contValidos++;
+                cont123 = 0;
             }
         }
     }
 
+    Tempos novoT[contValidos];
 
-    for (int j = 0; j < pilotos; j++) {
-        if(tempos[j] > maior)
+    int cont22=0,temp=0,ash=0;
+    for (int j = 0; j < 100; ++j) {
+        if (novo[j].id_piloto != 0)
         {
-            maior = tempos[j];
-            maiorN = j;
+            if(novo[j].tempo > 0)
+            {
+                cont22++;
+                temp = temp + novo[j].tempo;
+            }
+
+            if ((j+1)%etapas == 0)
+            {
+                if (cont22 == etapas)
+                {
+                    novoT[ash].tempo = temp;
+                    novoT[ash].id_piloto = novo[j].id_piloto;
+                    ash++;
+                }
+                temp = 0;
+                cont22 = 0;
+            }
+
+        }
+    }
+
+    for (int j = 0; j < contValidos; ++j) {
+        for (int k = 0; k < as; ++k) {
+            if (novoT[j].id_piloto == p[k].id)
+            {
+                strcpy(novoT[j].nome,p[k].nome);
+                strcpy(novoT[j].marca,p[k].marca);
+            }
         }
     }
 
     for (int j = 0; j < pilotos; j++) {
-        if(tempos[j] < menor)
+        if(novoT[j].tempo > maior)
         {
-            menor = tempos[j];
-            menorN = j;
+            maior = novoT[j].tempo ;
+            maiorN = novoT[j].id_piloto;
         }
     }
 
-    printf("Mais Lento \nTempo -> %d\nID -> %d\n\nMais Rapido \nTempo -> %d\nID -> %d\n",maior,maiorN+1,menor,menorN+1);
-    fclose(file);
+    for (int j = 0; j < pilotos; j++) {
+        if(novoT[j].tempo  < menor)
+        {
+            menor = novoT[j].tempo ;
+            menorN = novoT[j].id_piloto;
+        }
+    }
+
+
+
+    for (int j = 0; j < pilotos; ++j) {
+        if (novoT[j].id_piloto == maiorN)
+        {
+            printf("Mais Lento \nTempo -> %d\nID -> %d | Nome -> %s\n\n",maior,maiorN,novoT[j].nome);
+        }
+    }
+
+
+    for (int j = 0; j < pilotos; ++j) {
+        if (novoT[j].id_piloto == menorN)
+        {
+            printf("Mais Rapido \nTempo -> %d\nID -> %d | Nome -> %s",menor,menorN,novoT[j].nome);
+        }
+    }
 }
 
 void velocidadeMedia()
